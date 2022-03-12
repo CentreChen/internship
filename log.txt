@@ -1,0 +1,3 @@
+22.3.12
+	1. 学习简单的git命令（add,commit,push,pull）
+	2. 了解AST树的概念和相关知识
