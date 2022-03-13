@@ -2,4 +2,5 @@
 	1. 学习简单的git命令（add,commit,push,pull）
 	2. 了解AST树的概念和相关知识
 22.3.13
-	1. 尝试使用Parser Combinator跳过第一层(fail)
+	1. 尝试使用Parser Combinator跳过第一层(fail
+	2. c++ 实现的“十分之一”成品词法分析
