@@ -1,13 +1,13 @@
 /*
 数字只能十进制 
+暂未实现循环读入 
 */
 #include <bits/stdc++.h> 
-#define N 1024
-#define keyNum 22
+#define N 10000
+#define keyNum 23
 #define symbolNum1 22
 #define symbolNum2 15
 using namespace std;
-
 	
 //enum Token
 //{
@@ -20,7 +20,7 @@ using namespace std;
 char txt[N];
 int txt_length,txt_p=0;
 string key[keyNum] = {
-"int","char","float","double","void","unsigned","short",
+"int","char","float","double","bool","void","unsigned","short",
 "return","break","continue","true","false"
 "if","else","for","do","while",
 "scanf","printf","getchar","include","define",
@@ -31,22 +31,18 @@ string symbol[symbolNum1+symbolNum2] = {
 };
 
 
-
-
-
 int Type(string str){
-    if(str>="a" && str<="z")   // 字母 
+	if( (str>="a" && str<="z") || (str>="A" && str<="Z") )  // 字母 
         return 1;
 
     if(str>="0" && str<="9")   //数字 
         return 2;
 	
-	for(int i=0; i<32; i++)
-		if(str[0] == symbol[i][0])
-	        return 3;
-	
+	for(int i=0; i<symbolNum1; i++)
+		if(str == symbol[i])
+			return 3;
+	        
 	return 4; 
-
 }
 
 bool isFilter(char c){
@@ -57,9 +53,8 @@ bool isFilter(char c){
 }
 
 
-
 int String(string &s, int p){
-	while(isalnum(txt[++p])){
+	while(isalnum(txt[++p]) || txt[p] == '_'){
 		s = s + txt[p];
 	}
 	txt_p = p;
@@ -67,7 +62,7 @@ int String(string &s, int p){
         if(s == key[i])
         	return i+1;
     }
-    return 666;//variable
+    return 777;//variable
 }
 
 int Number(string &s, int p){
@@ -75,19 +70,21 @@ int Number(string &s, int p){
 		s = s + txt[p]; 
 	}
 	txt_p = p;
-	return 999;//number
+	return 99;//number
 }
 
 int Symbol(string &s, int p){
-	bool flag1 = 0 , i1;
+	int i1;
+	bool flag1 = 0;
 	for(i1=0; i1<symbolNum1 && !flag1; i1++)
 		if(s == symbol[i1])
 		{
 			flag1 = 1;
 			txt_p++; 
 		}
-
-	bool flag2 = 0, i2; 
+	
+	int i2;
+	bool flag2 = 0; 
 	for(i2=0; i2<symbolNum2 && !flag2; i2++)
 		if((s+txt[p+1]) == symbol[symbolNum1 + i2])
 		{
@@ -96,19 +93,18 @@ int Symbol(string &s, int p){
 			txt_p += 2; 
 		}
 			
-	
+	int n = keyNum+1;
 	if(flag2)
-		return symbolNum1+i2+1;
+		n += symbolNum1+i2;
 	else if(flag1)
-		return i1+1;
-	else
-		return 888;//未定义 
+		n += i1;
 		
+	return n;
 }
 
 
 void print(string s,int n){
-	printf("【  %-5s%5d  】\n", s.c_str(),n);
+	printf("【  %-8s%5d  】\n", s.c_str(),n);
 }
 void analyse()
 {
@@ -124,8 +120,6 @@ void analyse()
 		}
 		str = txt[txt_p];
 		int n;//种别码 
-//		cout << "analyse" <<endl;
-//		cout << str;
 		switch(Type(str))
 		{
 			case 1://字母 
@@ -141,6 +135,7 @@ void analyse()
 				print(str, n); 
 				break;
 			default:
+				txt_p++;
 				print(str, 0);
 		}
 	}
@@ -150,7 +145,7 @@ void analyse()
 int main()
 {
 	FILE *fp;
-    fp=freopen("E:\\CODE\\input.txt","r",stdin);//绝对路径
+    fp=freopen("E:\\CODE\\input.txt","r",stdin);
 //	freopen("result.txt","w",stdout);
     if (fp == NULL){
         printf("Not found!\n");
@@ -160,8 +155,9 @@ int main()
     char w;
     bool flag=false;
 //去注释 
-    while(cin>>w)
+    while(!feof(fp))
 	{	
+		w = getchar();
     	if(flag)
 		{
     		if(w!='/' && w!='*')
@@ -193,8 +189,8 @@ int main()
 		else if(w=='/')	flag=true;
 		
 	    txt[txt_length++] = w;
-	   // cout << txt[txt_length-1] <<endl;
     }
+    txt_length--;//文末空字符 
     
     analyse();
     return 0;
