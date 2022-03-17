@@ -3,7 +3,7 @@
 暂未实现循环读入 
 */
 #include <bits/stdc++.h> 
-#define N 10000
+#define N 100000
 #define keyNum 23
 #define symbolNum1 22
 #define symbolNum2 15
@@ -64,7 +64,6 @@ int String(string &s, int p){
     }
     return 777;//variable
 }
-
 int Number(string &s, int p){
 	while(isdigit(txt[++p])){
 		s = s + txt[p]; 
@@ -72,7 +71,6 @@ int Number(string &s, int p){
 	txt_p = p;
 	return 99;//number
 }
-
 int Symbol(string &s, int p){
 	int i1;
 	bool flag1 = 0;
@@ -98,13 +96,17 @@ int Symbol(string &s, int p){
 		n += symbolNum1+i2;
 	else if(flag1)
 		n += i1;
-		
+	else
+		return 888;//未定义 
 	return n;
 }
 
 
 void print(string s,int n){
-	printf("【  %-8s%5d  】\n", s.c_str(),n);
+	printf("\n\t{");
+	printf("\n\t\t\"type\": %d", n);
+	printf("\n\t\t\"value\": \"%s\"", s.c_str());
+	printf("\n\t},");	
 }
 void analyse()
 {
@@ -136,7 +138,7 @@ void analyse()
 				break;
 			default:
 				txt_p++;
-				print(str, 0);
+				print(str, 0);//未定义 
 		}
 	}
 }
@@ -145,8 +147,8 @@ void analyse()
 int main()
 {
 	FILE *fp;
-    fp=freopen("E:\\CODE\\input.txt","r",stdin);
-//	freopen("result.txt","w",stdout);
+    fp = freopen(".//test.c", "r", stdin);//绝对路径
+	freopen("TokenSteam.txt", "w", stdout);
     if (fp == NULL){
         printf("Not found!\n");
         exit(-1);
@@ -192,6 +194,12 @@ int main()
     }
     txt_length--;//文末空字符 
     
+    printf("["); 
     analyse();
+    printf("\n]");
+    
+    
+    fclose(stdin);
+	fclose(stdout);
     return 0;
 }
